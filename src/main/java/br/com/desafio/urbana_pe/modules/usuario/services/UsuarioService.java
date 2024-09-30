@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.desafio.urbana_pe.exceptions.NotFoundException;
@@ -16,12 +17,12 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public UsuarioEntity inserir(UsuarioEntity usuarioEntity) {
-        this.usuarioRepository
-            .findByEmail(usuarioEntity.getEmail())
-            .ifPresent((usuario) -> {
-                throw new NotFoundException("Usuário já existe. Informe um e-mail diferente!");
-        });
+        emailExistente(usuarioEntity.getEmail());
+        usuarioEntity.setSenha(passwordEncoder.encode(usuarioEntity.getSenha()));
         return this.usuarioRepository.save(usuarioEntity);
     }
 
@@ -48,9 +49,15 @@ public class UsuarioService {
 
         usuario.setNome(usuarioEntity.getNome());
         usuario.setEmail(usuarioEntity.getEmail());
-        usuario.setSenha(usuarioEntity.getSenha());
+        usuario.setSenha(passwordEncoder.encode(usuarioEntity.getSenha()));
 
         return this.usuarioRepository.save(usuario);
+    }
+
+    public void emailExistente(String email) {
+        if (usuarioRepository.findByEmail(email) != null) {
+            throw new NotFoundException("Usuário já existe. Informe um e-mail diferente!");
+        }
     }
 
 

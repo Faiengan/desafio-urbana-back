@@ -9,4 +9,8 @@ public class ErrorMessagemDTO {
     
     private String messagem;
     private String campo;
+
+    public ErrorMessagemDTO(String message) {
+        this.messagem = message;
+    }
 }

@@ -1,5 +1,6 @@
 package br.com.desafio.urbana_pe.modules.usuario.models;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import org.hibernate.validator.constraints.Length;
@@ -12,10 +13,12 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity(name = "usuario")
 @Data
-public class UsuarioEntity {
+public class UsuarioEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -35,4 +38,18 @@ public class UsuarioEntity {
     @Length(min = 5, message = "A senha dever ter um nó minimo 10!")
     private String senha;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
 }

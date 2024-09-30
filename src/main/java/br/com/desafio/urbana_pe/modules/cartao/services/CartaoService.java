@@ -23,7 +23,6 @@ public class CartaoService {
     @Autowired
     private UsuarioService usuarioService;
 
-
     public CartaoEntity cadastrarCartaoUsuario(CartaoEntity cartaoEntity, UUID usuario_id) {
         this.usuarioService.buscarUsuario(usuario_id);
         this.cartaoRepository
